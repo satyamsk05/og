@@ -23,7 +23,7 @@ export const config = {
   RELAYER_URL: process.env.RELAYER_URL || 'https://relayer-v2.polymarket.com',
 
   // Network
-  RPC_URL: process.env.RPC_URL || 'https://rpc.ankr.com/polygon',
+  RPC_URL: process.env.RPC_URL || 'https://1rpc.io/matic',
 
   // Strategy
   DRY_RUN: (process.env.DRY_RUN || 'true').toLowerCase() === 'true',

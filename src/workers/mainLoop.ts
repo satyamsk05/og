@@ -187,9 +187,9 @@ async function processMarketStep(state: MarketState, nowTs: number) {
     });
     state.startup_candles++;
 
-    // 4. Update trend in state
+    // 4. Update trend in state (only since start as requested)
     const candles = await getLastNCandles(4, state.interval, state.coin, BOT_START_TIME);
-    state.candles = candles.map(c => c.close_price > 0.5 ? '🟢' : '🔴');
+    state.candles = candles.map(c => c.close_price > 0.5 ? '1' : '0');
 
     const closes = candles.slice(-3).map(c => c.close_price);
     const signal = checkSignal(closes);

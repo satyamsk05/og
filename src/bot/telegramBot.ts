@@ -157,10 +157,10 @@ export async function startTelegramBot() {
     for (const coin of config.COINS) {
       const candles = await getLastNCandles(10, 15, coin, BOT_START_TIME);
       const trend = candles.length > 0 
-        ? candles.map(c => c.close_price > 0.5 ? '🟢' : '🔴').join('')
+        ? candles.map(c => c.close_price > 0.5 ? '1' : '0').join('')
         : '---- Empty Session'; 
       msg += `🌟 <b>${coin}</b>\n`;
-      msg += `${trend}\n\n`;
+      msg += `<code>${trend}</code>\n\n`;
     }
     msg += `────────────────────────`;
     await ctx.reply(msg, { parse_mode: 'HTML' });
@@ -172,10 +172,10 @@ export async function startTelegramBot() {
     for (const coin of config.COINS) {
       const candles = await getLastNCandles(10, 15, coin); // No minTs
       const trend = candles.length > 0 
-        ? candles.map(c => c.close_price > 0.5 ? '🟢' : '🔴').join('')
-        : '🔴🟢🔴🟢🟢🔴🟢🔴🟢🟢'; 
+        ? candles.map(c => c.close_price > 0.5 ? '1' : '0').join('')
+        : '1010010100'; 
       msg += `🌟 <b>${coin}</b>\n`;
-      msg += `${trend}\n\n`;
+      msg += `<code>${trend}</code>\n\n`;
     }
     msg += `────────────────────────`;
     await ctx.reply(msg, { parse_mode: 'HTML' });
