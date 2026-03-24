@@ -155,7 +155,8 @@ export async function startTelegramBot() {
     let msg = `📊 <b>SESSION MARKET HISTORY</b>\n`;
     msg += `────────────────────────\n\n`;
     for (const coin of config.COINS) {
-      const candles = await getLastNCandles(10, 15, coin, BOT_START_TIME);
+      // Use 1000 instead of 10 to capture the whole session's history
+      const candles = await getLastNCandles(1000, 15, coin, BOT_START_TIME);
       const trend = candles.length > 0 
         ? candles.map(c => c.close_price > 0.5 ? '1' : '0').join('')
         : '---- Empty Session'; 
@@ -170,10 +171,11 @@ export async function startTelegramBot() {
     let msg = `🗓️ <b>7-DAY MARKET HISTORY</b>\n`;
     msg += `────────────────────────\n\n`;
     for (const coin of config.COINS) {
-      const candles = await getLastNCandles(10, 15, coin); // No minTs
+      // 7 days * 24 h * 4 candles/h = 672 candles
+      const candles = await getLastNCandles(672, 15, coin); // No minTs
       const trend = candles.length > 0 
         ? candles.map(c => c.close_price > 0.5 ? '1' : '0').join('')
-        : '1010010100'; 
+        : '---- Empty History'; 
       msg += `🌟 <b>${coin}</b>\n`;
       msg += `<code>${trend}</code>\n\n`;
     }
