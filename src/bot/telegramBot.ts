@@ -47,7 +47,17 @@ if (fs.existsSync(CHAT_ID_FILE)) {
 export async function startTelegramBot() {
   registerNotifier(async (msg: string) => {
     if (targetChatId) {
-      await bot.api.sendMessage(targetChatId, msg, { parse_mode: 'HTML' });
+      try {
+        await bot.api.sendMessage(targetChatId, msg, { parse_mode: 'HTML' });
+      } catch (error) {
+        logger.error(`Failed to send Telegram message with HTML: ${error}`);
+        try {
+          // Fallback to plain text if HTML parsing fails
+          await bot.api.sendMessage(targetChatId, msg.replace(/<[^>]*>?/gm, ''));
+        } catch (fallbackError) {
+          logger.error(`Failed to send Telegram message directly: ${fallbackError}`);
+        }
+      }
     }
   });
 
@@ -145,7 +155,8 @@ export async function startTelegramBot() {
     if (trades.length === 0) msg += "No trades found.\n\n";
     for (const t of trades) {
       const date = new Date(t.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      msg += `${t.result === 'WIN' ? '🟢' : '🔴'} <b>${date}</b> | ${t.direction} | $${t.amount}\n`;
+      const statusPrefix = t.result === 'WIN' ? '🟢 <b>WIN </b>' : '🔴 <b>LOSS</b>';
+      msg += `${statusPrefix} | <b>${date}</b> | ${t.direction} | $${t.amount}\n`;
     }
     msg += `\n────────────────────────`;
     await ctx.reply(msg, { parse_mode: 'HTML' });

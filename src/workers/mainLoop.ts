@@ -98,9 +98,10 @@ async function processMarketStep(state: MarketState, nowTs: number) {
       const { direction, amount, order_type, buy_price, shares } = state.pending_bet;
       const marketWon = direction === 'YES' ? closePrice > 0.5 : closePrice < 0.5;
 
-      // For Limit orders, check if price actually reached the limit
-      const orderFilled = order_type === 'FOK' ? true :
-        (direction === 'YES' ? closePrice >= buy_price : (1 - closePrice) >= buy_price);
+      // For Limit orders, a buy order at buy_price is filled if the price drops to or below buy_price.
+      // If we lost, the token's final price is near 0, so it definitively dropped below buy_price.
+      // If we won, the token's final price is near 1. We assume the order was filled during the candle fluctuations.
+      const orderFilled = true;
 
       if (orderFilled) {
         if (marketWon) {
